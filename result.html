@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WanderAI — Your Travel Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue:#0057FF; --blue2:#003FC4; --blue-light:#EEF3FF;
+  --orange:#FF6B00; --orange2:#E55A00; --orange-light:#FFF3E8;
+  --green:#00A86B; --red:#E53935; --teal:#00B4D8;
+  --dark:#1A1D2E; --dark2:#2D3250; --mid:#5A607A;
+  --light:#F5F7FF; --white:#FFFFFF; --border:#E2E6F0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', sans-serif; background: var(--light); color: var(--dark); }
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, #1A1D2E 0%, #2D3250 60%, #3D5A99 100%);
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M20 20h20v20H20zM0 0h20v20H0z'/%3E%3C/g%3E%3C/svg%3E");
+}
+.hero-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 36px; border-bottom: 1px solid rgba(255,255,255,.08); position: relative;
+}
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-box { width: 38px; height: 38px; background: var(--orange); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.logo-name { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 800; color: #fff; }
+.logo-name span { color: var(--orange); }
+.back-btn {
+  background: rgba(255,255,255,.1); color: rgba(255,255,255,.8);
+  border: 1px solid rgba(255,255,255,.15); border-radius: 8px;
+  padding: 8px 16px; font-family: 'Nunito', sans-serif; font-size: 13px;
+  font-weight: 700; cursor: pointer; text-decoration: none; transition: all .2s;
+}
+.back-btn:hover { background: rgba(255,255,255,.18); }
+
+.hero-body { padding: 28px 36px 24px; position: relative; }
+.hero-route { font-size: 13px; color: rgba(255,255,255,.45); font-weight: 700; margin-bottom: 6px; letter-spacing: .3px; }
+.hero-title { font-family: 'Poppins', sans-serif; font-size: 30px; font-weight: 800; color: #fff; margin-bottom: 16px; }
+.hero-title span { color: var(--orange); }
+.hero-tags { display: flex; gap: 10px; flex-wrap: wrap; }
+.htag {
+  background: rgba(255,255,255,.08); color: rgba(255,255,255,.75);
+  border: 1px solid rgba(255,255,255,.12); border-radius: 20px;
+  padding: 5px 12px; font-size: 12px; font-weight: 700;
+}
+
+/* CONTAINER */
+.container { max-width: 1150px; margin: 0 auto; padding: 28px 24px; }
+.grid3 { display: grid; grid-template-columns: 1.7fr 1fr; gap: 22px; }
+.col { display: flex; flex-direction: column; gap: 18px; }
+
+/* STATUS BANNER */
+.status-banner {
+  border-radius: 14px; padding: 20px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 16px; margin-bottom: 20px;
+  animation: fadeUp .4s ease-out;
+}
+.sb-ok   { background: linear-gradient(135deg,#E8F8F0,#D4F0E4); border: 1.5px solid #72C79A; }
+.sb-fail { background: linear-gradient(135deg,#FEECEC,#FDD9D9); border: 1.5px solid #F1A1A1; }
+.sb-left { display: flex; align-items: center; gap: 14px; }
+.sb-icon { font-size: 32px; }
+.sb-title { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 800; }
+.sb-ok   .sb-title { color: #1E7A45; }
+.sb-fail .sb-title { color: var(--red); }
+.sb-sub { font-size: 12px; color: var(--mid); margin-top: 3px; font-weight: 600; }
+.sb-cost { text-align: right; }
+.sb-amt  { font-family: 'Poppins', sans-serif; font-size: 34px; font-weight: 800; color: var(--dark); line-height: 1; }
+.sb-of   { font-size: 11px; color: var(--mid); font-weight: 600; margin-top: 4px; }
+.sb-bar  { height: 5px; background: rgba(0,0,0,.08); border-radius: 3px; margin-top: 8px; width: 160px; overflow: hidden; }
+.sb-fill { height: 100%; border-radius: 3px; }
+.fill-ok   { background: linear-gradient(90deg, var(--green), var(--teal)); }
+.fill-fail { background: linear-gradient(90deg, var(--orange), var(--red)); }
+
+/* SECTION TITLE */
+.sec-title {
+  font-family: 'Poppins', sans-serif; font-size: 17px; font-weight: 700;
+  color: var(--dark); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+}
+.sec-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* STEP CARDS */
+@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+@keyframes slideIn { from { opacity:0; transform:translateX(-10px); } to { opacity:1; transform:translateX(0); } }
+
+.step-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 12px; display: flex; overflow: hidden;
+  margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.05);
+  animation: slideIn .3s ease-out forwards;
+}
+.sc-stripe { width: 5px; flex-shrink: 0; }
+.stripe-travel   { background: linear-gradient(180deg, var(--blue), var(--teal)); }
+.stripe-hotel    { background: linear-gradient(180deg, var(--green), #00C853); }
+.stripe-visit    { background: linear-gradient(180deg, var(--orange), #FFB300); }
+.stripe-meals    { background: linear-gradient(180deg, #E53935, #FF6D00); }
+.sc-body { flex: 1; padding: 13px 16px; display: flex; gap: 14px; align-items: center; }
+.sc-icon-box { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.ic-travel { background: #EEF3FF; }
+.ic-hotel  { background: #E6F8F0; }
+.ic-visit  { background: #FFF3E8; }
+.ic-meals  { background: #FEECEC; }
+.sc-info { flex: 1; }
+.sc-stepnum { font-size: 10px; font-weight: 800; color: var(--mid); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
+.sc-type { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.tc-travel { color: var(--blue); }
+.tc-hotel  { color: var(--green); }
+.tc-visit  { color: var(--orange); }
+.tc-meals  { color: var(--red); }
+.sc-desc { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600; color: var(--dark); }
+.sc-sub  { font-size: 11px; color: var(--mid); font-weight: 600; margin-top: 2px; }
+.sc-right { border-left: 1px dashed var(--border); padding: 13px 16px; min-width: 95px; display: flex; flex-direction: column; align-items: flex-end; justify-content: center; flex-shrink: 0; }
+.sc-curr   { font-size: 9px; font-weight: 800; color: var(--mid); letter-spacing: 1px; }
+.sc-amount { font-family: 'Poppins', sans-serif; font-size: 19px; font-weight: 700; color: var(--dark); }
+
+/* CARD */
+.card { background: var(--white); border-radius: 14px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,.06); }
+.card-head { padding: 13px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg,#F8F9FF,#fff); }
+.c-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.ci-blue   { background: var(--blue-light); }
+.ci-green  { background: #E6F8F0; }
+.ci-orange { background: var(--orange-light); }
+.ci-purple { background: #F3EEFF; }
+.c-title { font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; color: var(--dark); }
+.c-sub   { font-size: 11px; color: var(--mid); margin-top: 1px; }
+.card-body { padding: 16px 18px; }
+
+/* COST TABLE */
+.ctbl { width: 100%; border-collapse: collapse; }
+.ctbl td { padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 600; }
+.ctbl td:first-child { color: var(--mid); display: flex; align-items: center; gap: 7px; }
+.ctbl td:last-child { text-align: right; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; }
+.ctbl tr:last-child td { border-top: 2px solid var(--dark); border-bottom: 2px solid var(--dark); font-weight: 800; font-size: 14px; color: var(--dark); }
+.cdot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+/* GOAL STACK */
+.gs-item {
+  background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+  padding: 9px 12px; margin-bottom: 5px;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.gs-idx  { font-family: 'Courier New',monospace; font-size: 10px; color: var(--mid); min-width: 26px; font-weight: 700; }
+.gs-type { font-size: 10px; font-weight: 800; color: var(--orange); letter-spacing: .5px; min-width: 75px; text-transform: uppercase; }
+.gs-det  { font-size: 12px; color: var(--dark); flex: 1; font-weight: 600; }
+.gs-tick { font-size: 11px; color: var(--green); font-weight: 800; }
+
+/* TRACE */
+.tr-item { padding: 9px 0; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 10px; }
+.tr-num  { width: 20px; height: 20px; border-radius: 50%; background: var(--blue); color: #fff; font-size: 9px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.tr-goal { font-family: 'Courier New',monospace; font-size: 10.5px; color: var(--dark2); font-weight: 700; margin-bottom: 2px; }
+.tr-op   { font-size: 11px; color: var(--mid); font-weight: 600; }
+.tr-op span { color: var(--orange); font-weight: 800; }
+.tr-ok { font-size: 9px; font-weight: 800; color: var(--green); background: #E6F8F0; padding: 2px 6px; border-radius: 20px; margin-left: 6px; }
+.tr-skip { font-size: 9px; font-weight: 800; color: var(--mid); background: var(--light); padding: 2px 6px; border-radius: 20px; margin-left: 6px; }
+
+/* METRICS TABLE */
+.mtbl { width: 100%; border-collapse: collapse; }
+.mtbl td { padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+.mtbl td:first-child { color: var(--mid); font-weight: 700; font-size: 11px; }
+.mtbl td:last-child  { text-align: right; font-weight: 800; color: var(--dark); font-family: 'Poppins',sans-serif; }
+.mtbl tr:last-child td { border-bottom: none; }
+
+/* STATE TAGS */
+.state-area { display: flex; flex-wrap: wrap; gap: 5px; max-height: 180px; overflow-y: auto; }
+.stag { display: inline-block; border-radius: 20px; padding: 3px 10px; font-size: 10px; font-weight: 700; font-family: 'Courier New',monospace; }
+.stag-visited { background: #E6F8F0; color: var(--green); border: 1px solid #9FCCAD; }
+.stag-accom   { background: var(--blue-light); color: var(--blue); border: 1px solid rgba(0,87,255,.2); }
+.stag-other   { background: var(--light); color: var(--mid); border: 1px solid var(--border); }
+
+/* TABS */
+.tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 18px; }
+.tab-btn { padding: 10px 18px; font-size: 13px; font-weight: 700; color: var(--mid); cursor: pointer; border: none; background: none; font-family: 'Nunito',sans-serif; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .18s; }
+.tab-btn:hover { color: var(--blue); }
+.tab-btn.on { color: var(--blue); border-bottom-color: var(--blue); }
+.tab-panel { display: none; }
+.tab-panel.on { display: block; }
+
+/* PDDL */
+.pddl-box { background: var(--dark); border-radius: 10px; padding: 16px; font-family: 'Courier New',monospace; font-size: 11px; color: #8AA8C8; line-height: 1.85; overflow-x: auto; white-space: pre; }
+.kw { color: #C3A6FF; } .pd { color: #87D3C9; } .op { color: #FFCA7A; } .cm { color: #4A6080; }
+
+/* OP CARD */
+.op-card { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+.op-head { background: var(--light); padding: 10px 14px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
+.op-name { font-family: 'Courier New',monospace; font-size: 12px; font-weight: 700; color: var(--dark); }
+.op-par  { font-size: 11px; color: var(--mid); font-weight: 600; }
+.op-body { padding: 12px 14px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.os-lbl  { font-size: 10px; font-weight: 800; color: var(--mid); letter-spacing: .8px; text-transform: uppercase; margin-bottom: 5px; }
+.os-val  { font-family: 'Courier New',monospace; font-size: 10px; padding: 7px 9px; border-radius: 6px; line-height: 1.7; }
+.pv { background: #EEF3FF; color: #1A3A8F; }
+.av { background: #E6F8F0; color: #1A5C35; }
+.dv { background: #FEECEC; color: #7A1A1A; }
+
+@media(max-width:768px) {
+  .grid3 { grid-template-columns: 1fr; }
+  .hero-nav { padding: 14px 20px; }
+  .hero-body { padding: 20px 20px 16px; }
+  .container { padding: 18px 14px; }
+  .op-body { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-nav">
+    <a href="/" class="logo">
+      <div class="logo-box">✈️</div>
+      <div class="logo-name">Wander<span>AI</span></div>
+    </a>
+    <a href="/" class="back-btn">← Plan Again</a>
+  </div>
+  <div class="hero-body">
+    <div class="hero-route">📍 {{ origin }} {% for s in stopovers %} → {{ s }} {% endfor %} → {{ destination }}</div>
+    <div class="hero-title">
+      {% if result.feasible and result.goal_reached %}
+        Your <span>Optimal</span> Travel Plan
+      {% elif result.goal_reached %}
+        Plan Generated — <span>Over Budget</span>
+      {% else %}
+        <span>Incomplete</span> Plan
+      {% endif %}
+    </div>
+    <div class="hero-tags">
+      <div class="htag">{{ days }} days</div>
+      <div class="htag">₹{{ "{:,}".format(budget) }} budget</div>
+      <div class="htag">{{ transport_icon[transport] }} {{ transport.title() }}</div>
+      <div class="htag">{{ hotel_stars[hotel] }} {{ hotel.title() }}</div>
+      <div class="htag">🍽️ {{ food.title() }} dining</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn on" onclick="switchTab('itinerary',this)">📋 Itinerary</button>
+    <button class="tab-btn" onclick="switchTab('trace',this)">🧠 AI Trace</button>
+    <button class="tab-btn" onclick="switchTab('pddl',this)">🧩 PDDL Domain</button>
+  </div>
+
+  <!-- ══ TAB: ITINERARY ══ -->
+  <div class="tab-panel on" id="tp-itinerary">
+    <div class="grid3">
+
+      <!-- LEFT: Steps -->
+      <div>
+        <!-- Status Banner -->
+        <div class="status-banner {{ 'sb-ok' if result.feasible else 'sb-fail' }}">
+          <div class="sb-left">
+            <div class="sb-icon">{{ '✅' if result.feasible else '⚠️' }}</div>
+            <div>
+              <div class="sb-title">
+                {{ 'Feasible Plan Generated' if result.feasible else 'Plan Exceeds Budget' }}
+              </div>
+              <div class="sb-sub">
+                {{ result.ops_count }} steps &nbsp;·&nbsp;
+                {{ result.satisfied_count }} goals satisfied &nbsp;·&nbsp;
+                STRIPS Goal Stack Planning
+              </div>
+            </div>
+          </div>
+          <div class="sb-cost">
+            <div class="sb-amt">₹{{ "{:,}".format(result.total_cost) }}</div>
+            <div class="sb-of">of ₹{{ "{:,}".format(budget) }}</div>
+            <div class="sb-bar">
+              {% set pct = [100, (result.total_cost / budget * 100)|int]|min %}
+              <div class="sb-fill {{ 'fill-ok' if result.feasible else 'fill-fail' }}"
+                   style="width:{{ pct }}%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step-by-step cards -->
+        <div class="sec-title">📋 Step-by-Step Plan</div>
+
+        {% set type_config = {
+          'TRAVEL': {'stripe':'stripe-travel','ic':'ic-travel','icon':'✈️','tc':'tc-travel','label':'TRANSIT'},
+          'HOTEL':  {'stripe':'stripe-hotel', 'ic':'ic-hotel', 'icon':'🏨','tc':'tc-hotel', 'label':'STAY'},
+          'VISIT':  {'stripe':'stripe-visit', 'ic':'ic-visit', 'icon':'🎯','tc':'tc-visit', 'label':'ACTIVITY'},
+          'MEALS':  {'stripe':'stripe-meals', 'ic':'ic-meals', 'icon':'🍽️','tc':'tc-meals', 'label':'DINING'},
+        } %}
+
+        {% for s in result.steps %}
+        {% set cfg = type_config[s.type] %}
+        <div class="step-card" style="animation-delay:{{ loop.index0 * 0.05 }}s">
+          <div class="sc-stripe {{ cfg.stripe }}"></div>
+          <div class="sc-body">
+            <div class="sc-icon-box {{ cfg.ic }}">{{ cfg.icon }}</div>
+            <div class="sc-info">
+              <div class="sc-stepnum">STEP {{ '%02d'|format(s.step) }}</div>
+              <div class="sc-type {{ cfg.tc }}">{{ cfg.label }}</div>
+              <div class="sc-desc">{{ s.desc }}</div>
+              <div class="sc-sub">{{ s.sub }}</div>
+            </div>
+          </div>
+          <div class="sc-right">
+            <div class="sc-curr">INR</div>
+            <div class="sc-amount">{{ "{:,}".format(s.cost) }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- RIGHT: Summary -->
+      <div class="col">
+
+        <!-- Cost Breakdown -->
+        <div class="card">
+          <div class="card-head">
+            <div class="c-icon ci-orange">💰</div>
+            <div>
+              <div class="c-title">Cost Breakdown</div>
+              <div class="c-sub">By category</div>
+            </div>
+          </div>
+          <div class="card-body">
+            {% set cat_icons = {'TRAVEL':'✈️','HOTEL':'🏨','VISIT':'🎯','MEALS':'🍽️'} %}
+            {% set cat_dots  = {'TRAVEL':'#0057FF','HOTEL':'#00A86B','VISIT':'#FF6B00','MEALS':'#E53935'} %}
+            <table class="ctbl">
+              {% for cat, amt in result.category_totals.items() %}
+              <tr>
+                <td><span class="cdot" style="background:{{ cat_dots[cat] }}"></span>{{ cat }}</td>
+                <td>₹{{ "{:,}".format(amt) }}</td>
+              </tr>
+              {% endfor %}
+              <tr>
+                <td><strong>TOTAL</strong></td>
+                <td>₹{{ "{:,}".format(result.total_cost) }}</td>
+              </tr>
+            </table>
+            {% set remaining = budget - result.total_cost %}
+            <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+              {% if remaining >= 0 %}
+              <div style="color:var(--green);font-weight:800;font-size:13px">✅ ₹{{ "{:,}".format(remaining) }} remaining</div>
+              {% else %}
+              <div style="color:var(--red);font-weight:800;font-size:13px">❌ ₹{{ "{:,}".format(remaining|abs) }} over budget</div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Final World State -->
+        <div class="card">
+          <div class="card-head">
+            <div class="c-icon ci-green">✅</div>
+            <div>
+              <div class="c-title">Final World State</div>
+              <div class="c-sub">True facts after planning</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="state-area">
+              {% for fact in result.final_state %}
+                {% if 'visited' in fact or 'seen' in fact %}
+                  <span class="stag stag-visited">{{ fact }}</span>
+                {% elif 'has_accom' in fact %}
+                  <span class="stag stag-accom">{{ fact }}</span>
+                {% else %}
+                  <span class="stag stag-other">{{ fact }}</span>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB: AI TRACE ══ -->
+  <div class="tab-panel" id="tp-trace">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+      <!-- Goal Stack -->
+      <div>
+        <div class="sec-title">📚 Goal Stack</div>
+        <div class="card">
+          <div class="card-head">
+            <div class="c-icon ci-orange">📌</div>
+            <div>
+              <div class="c-title">Goals Pushed to Stack</div>
+              <div class="c-sub">{{ result.goals_count }} total goals</div>
+            </div>
+          </div>
+          <div class="card-body" style="max-height:500px;overflow-y:auto;padding:12px">
+            {% for g in result.goal_stack %}
+            <div class="gs-item">
+              <span class="gs-idx">[{{ '%02d'|format(g.idx) }}]</span>
+              <span class="gs-type">{{ g.type }}</span>
+              <span class="gs-det">{{ g.detail }}</span>
+              <span class="gs-tick">✓</span>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Resolution Trace + Metrics -->
+      <div class="col">
+        <div>
+          <div class="sec-title">🔍 Resolution Trace</div>
+          <div class="card">
+            <div class="card-head">
+              <div class="c-icon ci-blue">⚡</div>
+              <div><div class="c-title">Goal → Operator Mapping</div></div>
+            </div>
+            <div class="card-body" style="max-height:300px;overflow-y:auto;padding:12px">
+              {% for i, t in enumerate(result.trace) %}
+              <div class="tr-item">
+                <div class="tr-num">{{ i+1 }}</div>
+                <div>
+                  <div class="tr-goal">GOAL: {{ t.goal }} — {{ t.detail }}</div>
+                  <div class="tr-op">
+                    operator: <span>{{ t.operator }}</span>
+                    {% if t.success %}
+                    <span class="tr-ok">✓ SAT</span>
+                    {% else %}
+                    <span class="tr-skip">SKIP</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div class="c-icon ci-green">📊</div>
+            <div><div class="c-title">Algorithm Metrics</div></div>
+          </div>
+          <div class="card-body">
+            <table class="mtbl">
+              <tr><td>Method</td><td>Goal Stack (STRIPS)</td></tr>
+              <tr><td>Goals Pushed</td><td>{{ result.goals_count }}</td></tr>
+              <tr><td>Operators Applied</td><td>{{ result.ops_count }}</td></tr>
+              <tr><td>Goals Satisfied</td><td>{{ result.satisfied_count }}</td></tr>
+              <tr><td>Total Cost</td><td>₹{{ "{:,}".format(result.total_cost) }}</td></tr>
+              <tr>
+                <td>Feasible</td>
+                <td style="color:{{ '#00A86B' if result.feasible else '#E53935' }}">
+                  {{ '✅ Yes' if result.feasible else '❌ No' }}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ TAB: PDDL ══ -->
+  <div class="tab-panel" id="tp-pddl">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div>
+        <div class="sec-title">📄 PDDL Domain File</div>
+        <div class="card">
+          <div class="card-head">
+            <div class="c-icon ci-blue">📄</div>
+            <div><div class="c-title">travel-domain.pddl</div><div class="c-sub">Standard STRIPS format</div></div>
+          </div>
+          <div class="card-body" style="padding:10px">
+<div class="pddl-box"><span class="cm">; PDDL Domain — AI Travel Planner
+; STRIPS-based planning</span>
+
+(<span class="kw">define</span> (<span class="pd">domain</span> travel-domain)
+  (<span class="kw">:requirements</span> :strips :typing)
+
+  (<span class="kw">:types</span> city transport hotel food)
+
+  (<span class="kw">:predicates</span>
+    (<span class="op">at</span> ?c - city)
+    (<span class="op">visited</span> ?c - city)
+    (<span class="op">has-accom</span> ?c - city)
+    (<span class="op">seen-attr</span> ?a - object ?c - city)
+    (<span class="op">meals-arranged</span> ?c - city)
+    (<span class="op">transport-available</span> ?t - transport)
+  )
+
+  (<span class="kw">:action</span> <span class="op">TRAVEL</span>
+    :parameters (<span class="pd">?from ?to - city ?t - transport</span>)
+    :precondition (and
+      (<span class="op">at</span> ?from)
+      (<span class="op">transport-available</span> ?t))
+    :effect (and
+      (not (<span class="op">at</span> ?from))
+      (<span class="op">at</span> ?to)
+      (<span class="op">visited</span> ?to))
+  )
+
+  (<span class="kw">:action</span> <span class="op">BOOK-HOTEL</span>
+    :parameters (<span class="pd">?c - city ?h - hotel</span>)
+    :precondition (<span class="op">at</span> ?c)
+    :effect (<span class="op">has-accom</span> ?c)
+  )
+
+  (<span class="kw">:action</span> <span class="op">VISIT-ATTRACTION</span>
+    :parameters (<span class="pd">?a - object ?c - city</span>)
+    :precondition (and
+      (<span class="op">at</span> ?c) (<span class="op">has-accom</span> ?c))
+    :effect (<span class="op">seen-attr</span> ?a ?c)
+  )
+
+  (<span class="kw">:action</span> <span class="op">ARRANGE-MEALS</span>
+    :parameters (<span class="pd">?c - city ?f - food</span>)
+    :precondition (<span class="op">at</span> ?c)
+    :effect (<span class="op">meals-arranged</span> ?c)
+  )
+)</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="sec-title">⚙️ Operators Explained</div>
+        {% set ops = [
+          ('✈️','TRAVEL','?from ?to — city, ?t — transport',
+           'at(?from)\ntransport-available(?t)','at(?to)\nvisited(?to)','NOT at(?from)'),
+          ('🏨','BOOK-HOTEL','?c — city, ?h — hotel',
+           'at(?c)','has-accom(?c)','—'),
+          ('🎯','VISIT-ATTRACTION','?a — object, ?c — city',
+           'at(?c)\nhas-accom(?c)','seen-attr(?a,?c)','—'),
+          ('🍽️','ARRANGE-MEALS','?c — city, ?f — food',
+           'at(?c)','meals-arranged(?c)','—'),
+        ] %}
+        {% for icon,name,params,pre,add,del in ops %}
+        <div class="op-card">
+          <div class="op-head">
+            <div style="font-size:20px">{{ icon }}</div>
+            <div>
+              <div class="op-name">{{ name }}</div>
+              <div class="op-par">{{ params }}</div>
+            </div>
+          </div>
+          <div class="op-body">
+            <div><div class="os-lbl">Precondition</div><div class="os-val pv">{{ pre }}</div></div>
+            <div><div class="os-lbl">Add Effect</div><div class="os-val av">{{ add }}</div></div>
+            <div><div class="os-lbl">Delete Effect</div><div class="os-val dv">{{ del }}</div></div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  document.getElementById('tp-' + id).classList.add('on');
+  btn.classList.add('on');
+}
+
+// Animate budget bar on load
+window.addEventListener('load', () => {
+  document.querySelectorAll('.sb-fill').forEach(el => {
+    const w = el.style.width;
+    el.style.width = '0';
+    setTimeout(() => { el.style.transition = 'width 1.2s cubic-bezier(.22,1,.36,1)'; el.style.width = w; }, 100);
+  });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WanderAI — AI Travel Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue:#0057FF; --blue2:#003FC4; --blue-light:#EEF3FF;
+  --orange:#FF6B00; --orange2:#E55A00; --orange-light:#FFF3E8;
+  --green:#00A86B; --red:#E53935; --teal:#00B4D8;
+  --dark:#1A1D2E; --dark2:#2D3250; --mid:#5A607A;
+  --light:#F5F7FF; --white:#FFFFFF; --border:#E2E6F0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', sans-serif; background: var(--light); color: var(--dark); min-height: 100vh; }
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, #1A1D2E 0%, #2D3250 60%, #3D5A99 100%);
+  padding: 0;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M20 20h20v20H20zM0 0h20v20H0z'/%3E%3C/g%3E%3C/svg%3E");
+}
+.hero-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 36px; border-bottom: 1px solid rgba(255,255,255,.08);
+  position: relative;
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-box {
+  width: 38px; height: 38px; background: var(--orange); border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; font-size: 20px;
+  box-shadow: 0 4px 14px rgba(255,107,0,.45);
+}
+.logo-name { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 800; color: #fff; }
+.logo-name span { color: var(--orange); }
+.logo-tag {
+  background: rgba(255,255,255,.1); color: rgba(255,255,255,.6);
+  font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+  padding: 3px 9px; border-radius: 20px; border: 1px solid rgba(255,255,255,.15);
+}
+.nav-right { color: rgba(255,255,255,.35); font-size: 12px; font-weight: 700; letter-spacing: .5px; }
+.hero-body { padding: 40px 36px 32px; display: flex; align-items: center; gap: 40px; position: relative; }
+.hero-text { flex: 1; }
+.hero-title { font-family: 'Poppins', sans-serif; font-size: 38px; font-weight: 800; color: #fff; line-height: 1.15; margin-bottom: 10px; }
+.hero-title span { color: var(--orange); }
+.hero-sub { color: rgba(255,255,255,.5); font-size: 15px; font-weight: 600; margin-bottom: 24px; }
+.hero-pills { display: flex; gap: 10px; flex-wrap: wrap; }
+.pill {
+  background: rgba(255,255,255,.08); color: rgba(255,255,255,.7);
+  border: 1px solid rgba(255,255,255,.12); border-radius: 20px;
+  padding: 6px 14px; font-size: 12px; font-weight: 700; letter-spacing: .3px;
+}
+.hero-emoji { font-size: 90px; opacity: .12; flex-shrink: 0; letter-spacing: -12px; }
+
+/* MAIN CONTAINER */
+.container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+.page-title {
+  font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 700;
+  color: var(--dark); margin-bottom: 22px; display: flex; align-items: center; gap: 10px;
+}
+.page-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* GRID */
+.form-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 22px; }
+
+/* CARD */
+.card {
+  background: var(--white); border-radius: 14px; border: 1px solid var(--border);
+  overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,.07);
+  margin-bottom: 18px;
+}
+.card-head {
+  padding: 14px 20px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, #F8F9FF, #fff);
+}
+.c-icon {
+  width: 34px; height: 34px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
+}
+.ci-blue { background: var(--blue-light); }
+.ci-orange { background: var(--orange-light); }
+.ci-green { background: #E6F8F0; }
+.ci-teal { background: #E0F7FC; }
+.c-title { font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; color: var(--dark); }
+.c-sub { font-size: 11px; color: var(--mid); margin-top: 1px; }
+.card-body { padding: 20px; }
+
+/* FORM ELEMENTS */
+.flabel {
+  display: block; font-size: 11px; font-weight: 800; color: var(--mid);
+  letter-spacing: .8px; text-transform: uppercase; margin-bottom: 6px;
+}
+.finp {
+  width: 100%; background: var(--light); border: 1.5px solid var(--border);
+  color: var(--dark); padding: 11px 14px; font-family: 'Nunito', sans-serif;
+  font-size: 13px; font-weight: 700; border-radius: 9px; transition: all .2s;
+  appearance: none; -webkit-appearance: none;
+}
+.finp:focus { outline: none; border-color: var(--blue); background: #fff; box-shadow: 0 0 0 3px rgba(0,87,255,.08); }
+.finp option { background: #fff; }
+.sel-wrap { position: relative; }
+.sel-wrap::after { content: "▾"; position: absolute; right: 13px; top: 50%; transform: translateY(-50%); color: var(--mid); font-size: 12px; pointer-events: none; }
+.frow2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.fgroup { margin-bottom: 16px; }
+.fgroup:last-child { margin-bottom: 0; }
+
+/* TILES */
+.tile-grid { display: grid; gap: 8px; }
+.tg4 { grid-template-columns: repeat(4, 1fr); }
+.tg3 { grid-template-columns: repeat(3, 1fr); }
+.tile {
+  background: var(--light); border: 2px solid var(--border);
+  border-radius: 10px; padding: 12px 6px; cursor: pointer;
+  text-align: center; transition: all .18s; user-select: none;
+}
+.tile:hover { border-color: var(--blue); background: var(--blue-light); }
+.tile.selected { border-color: var(--blue); background: var(--blue); box-shadow: 0 4px 14px rgba(0,87,255,.28); }
+.tile.selected .tile-name { color: #fff; }
+.tile.selected .tile-sub  { color: rgba(255,255,255,.65); }
+.tile-icon { font-size: 20px; margin-bottom: 4px; }
+.tile-name { font-size: 12px; font-weight: 800; color: var(--dark); transition: color .18s; }
+.tile-sub  { font-size: 10px; color: var(--mid); margin-top: 2px; font-weight: 600; transition: color .18s; }
+
+/* ROUTE VIZ */
+.route-preview {
+  background: linear-gradient(135deg, var(--light), var(--blue-light));
+  border: 1px solid rgba(0,87,255,.12); border-radius: 10px;
+  padding: 14px 16px; margin-top: 4px;
+}
+.rp-label { font-size: 10px; font-weight: 800; color: var(--blue); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+.rp-row { display: flex; align-items: center; flex-wrap: wrap; gap: 2px; }
+.rp-city { display: flex; align-items: center; gap: 6px; }
+.rp-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+.dot-start { background: var(--green); box-shadow: 0 0 0 3px rgba(0,168,107,.2); }
+.dot-end   { background: var(--red);   box-shadow: 0 0 0 3px rgba(229,57,53,.2); }
+.dot-stop  { background: var(--orange); }
+.rp-name { font-size: 12px; font-weight: 800; color: var(--dark); }
+.rp-arrow { color: var(--blue); font-size: 14px; margin: 0 4px; }
+
+/* ERROR BOX */
+.error-box {
+  background: #FEECEC; border: 1.5px solid #F1A1A1; border-radius: 10px;
+  padding: 14px 18px; margin-bottom: 20px; color: var(--red);
+  font-weight: 700; font-size: 14px;
+}
+
+/* GENERATE BUTTON */
+.gen-btn {
+  width: 100%; background: linear-gradient(135deg, var(--orange), var(--orange2));
+  color: #fff; border: none; padding: 16px; font-family: 'Poppins', sans-serif;
+  font-size: 15px; font-weight: 700; letter-spacing: .5px; cursor: pointer;
+  border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  gap: 10px; transition: all .2s; box-shadow: 0 6px 22px rgba(255,107,0,.38);
+  margin-top: 4px;
+}
+.gen-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,107,0,.48); }
+.gen-btn:active { transform: translateY(0); }
+
+/* AI CONCEPT BOX */
+.concept-box { border-radius: 9px; padding: 12px 14px; margin-bottom: 10px; }
+.cb-blue   { background: var(--blue-light);   border-left: 3px solid var(--blue); }
+.cb-green  { background: #E6F8F0;              border-left: 3px solid var(--green); }
+.cb-orange { background: var(--orange-light);  border-left: 3px solid var(--orange); }
+.cb-title  { font-size: 11px; font-weight: 800; letter-spacing: .8px; margin-bottom: 3px; }
+.cb-blue .cb-title   { color: var(--blue); }
+.cb-green .cb-title  { color: var(--green); }
+.cb-orange .cb-title { color: var(--orange); }
+.cb-text { font-size: 12px; color: var(--mid); font-weight: 600; line-height: 1.5; }
+
+/* HOW IT WORKS */
+.how-steps { display: flex; flex-direction: column; gap: 10px; }
+.how-step { display: flex; align-items: flex-start; gap: 12px; }
+.how-num {
+  width: 26px; height: 26px; background: var(--blue); color: #fff;
+  border-radius: 50%; font-size: 11px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+}
+.how-text { font-size: 12px; font-weight: 700; color: var(--dark); line-height: 1.5; }
+.how-text span { color: var(--mid); font-weight: 600; }
+
+@media(max-width: 768px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .hero-body { padding: 26px 20px 22px; }
+  .hero-nav { padding: 14px 20px; }
+  .hero-title { font-size: 28px; }
+  .hero-emoji { display: none; }
+  .tg4 { grid-template-columns: 1fr 1fr; }
+  .container { padding: 20px 14px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-nav">
+    <div class="logo">
+      <div class="logo-box">✈️</div>
+      <div class="logo-name">Wander<span>AI</span></div>
+      <div class="logo-tag">PYTHON + FLASK</div>
+    </div>
+    <div class="nav-right">STRIPS · PDDL · Goal Stack Planning</div>
+  </div>
+  <div class="hero-body">
+    <div class="hero-text">
+      <div class="hero-title">Plan your trip<br>with <span>AI</span></div>
+      <div class="hero-sub">Enter your preferences — Python runs the AI planning algorithm</div>
+      <div class="hero-pills">
+        <div class="pill">🧠 Goal Stack Planning</div>
+        <div class="pill">⚙️ STRIPS Operators</div>
+        <div class="pill">📚 Knowledge Base</div>
+        <div class="pill">🗂️ PDDL</div>
+      </div>
+    </div>
+    <div class="hero-emoji">🗺️✈️🏨</div>
+  </div>
+</div>
+
+<!-- MAIN FORM -->
+<div class="container">
+
+  {% if error %}
+  <div class="error-box">⚠️ {{ error }}</div>
+  {% endif %}
+
+  <div class="page-title">🗺️ Configure Your Trip</div>
+
+  <form action="/plan" method="POST">
+  <div class="form-grid">
+
+    <!-- LEFT COLUMN -->
+    <div>
+
+      <!-- Route -->
+      <div class="card">
+        <div class="card-head">
+          <div class="c-icon ci-blue">🛫</div>
+          <div>
+            <div class="c-title">Route Setup</div>
+            <div class="c-sub">Where are you going?</div>
+          </div>
+        </div>
+        <div class="card-body">
+
+          <div class="frow2">
+            <div class="fgroup">
+              <label class="flabel">Origin City</label>
+              <div class="sel-wrap">
+                <select name="origin" class="finp" id="sel-origin" onchange="updateRoute()">
+                  {% for city in cities %}
+                  <option value="{{ city }}" {% if city == 'Delhi' %}selected{% endif %}>{{ city }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="fgroup">
+              <label class="flabel">Destination</label>
+              <div class="sel-wrap">
+                <select name="destination" class="finp" id="sel-dest" onchange="updateRoute()">
+                  {% for city in cities %}
+                  <option value="{{ city }}" {% if city == 'Goa' %}selected{% endif %}>{{ city }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="fgroup">
+            <label class="flabel">Stopover Cities (optional)</label>
+            <div class="sel-wrap">
+              <select class="finp" id="sel-stop" onchange="addStop(this.value); this.value=''">
+                <option value="">— Add a stopover city —</option>
+                {% for city in cities %}
+                <option value="{{ city }}">{{ city }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <input type="hidden" name="stopovers" id="inp-stopovers" value="">
+            <div id="chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;min-height:28px;">
+              <span style="font-size:12px;color:var(--mid);font-weight:600;padding-top:4px">No stopovers added</span>
+            </div>
+          </div>
+
+          <div class="frow2">
+            <div class="fgroup">
+              <label class="flabel">Duration (days)</label>
+              <input type="number" name="days" class="finp" min="1" max="30" value="5">
+            </div>
+            <div class="fgroup">
+              <label class="flabel">Budget (₹)</label>
+              <input type="number" name="budget" class="finp" min="1000" step="1000" value="30000">
+            </div>
+          </div>
+
+          <!-- Route Preview -->
+          <div class="route-preview">
+            <div class="rp-label">📍 Route Preview</div>
+            <div class="rp-row" id="route-row"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Transport -->
+      <div class="card">
+        <div class="card-head">
+          <div class="c-icon ci-teal">🚀</div>
+          <div>
+            <div class="c-title">Mode of Transport</div>
+            <div class="c-sub">Click to select</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="tile-grid tg4">
+            <div class="tile selected" onclick="selectTile(this,'transport','flight')">
+              <div class="tile-icon">✈️</div><div class="tile-name">Flight</div><div class="tile-sub">Fastest</div>
+            </div>
+            <div class="tile" onclick="selectTile(this,'transport','train')">
+              <div class="tile-icon">🚆</div><div class="tile-name">Train</div><div class="tile-sub">Scenic</div>
+            </div>
+            <div class="tile" onclick="selectTile(this,'transport','bus')">
+              <div class="tile-icon">🚌</div><div class="tile-name">Bus</div><div class="tile-sub">Budget</div>
+            </div>
+            <div class="tile" onclick="selectTile(this,'transport','cab')">
+              <div class="tile-icon">🚗</div><div class="tile-name">Cab</div><div class="tile-sub">Flexible</div>
+            </div>
+          </div>
+          <input type="hidden" name="transport" id="inp-transport" value="flight">
+        </div>
+      </div>
+
+    </div><!-- /LEFT -->
+
+    <!-- RIGHT COLUMN -->
+    <div>
+
+      <!-- Hotel -->
+      <div class="card">
+        <div class="card-head">
+          <div class="c-icon ci-orange">🏨</div>
+          <div>
+            <div class="c-title">Accommodation</div>
+            <div class="c-sub">Choose your stay type</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="tile-grid tg4">
+            <div class="tile" onclick="selectTile(this,'hotel','budget')">
+              <div class="tile-icon">🏠</div><div class="tile-name">Budget</div><div class="tile-sub">★★</div>
+            </div>
+            <div class="tile selected" onclick="selectTile(this,'hotel','standard')">
+              <div class="tile-icon">🏨</div><div class="tile-name">Standard</div><div class="tile-sub">★★★</div>
+            </div>
+            <div class="tile" onclick="selectTile(this,'hotel','premium')">
+              <div class="tile-icon">🏩</div><div class="tile-name">Premium</div><div class="tile-sub">★★★★</div>
+            </div>
+            <div class="tile" onclick="selectTile(this,'hotel','luxury')">
+              <div class="tile-icon">🏰</div><div class="tile-name">Luxury</div><div class="tile-sub">★★★★★</div>
+            </div>
+          </div>
+          <input type="hidden" name="hotel" id="inp-hotel" value="standard">
+        </div>
+      </div>
+
+      <!-- Food -->
+      <div class="card">
+        <div class="card-head">
+          <div class="c-icon ci-green">🍽️</div>
+          <div>
+            <div class="c-title">Dining Preference</div>
+            <div class="c-sub">Food budget per city</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="tile-grid tg3">
+            <div class="tile" onclick="selectTile(this,'food','budget')">
+              <div class="tile-icon">🍱</div><div class="tile-name">Budget</div><div class="tile-sub">₹900/day</div>
+            </div>
+            <div class="tile selected" onclick="selectTile(this,'food','standard')">
+              <div class="tile-icon">🍛</div><div class="tile-name">Standard</div><div class="tile-sub">₹2400/day</div>
+            </div>
+            <div class="tile" onclick="selectTile(this,'food','premium')">
+              <div class="tile-icon">🍽️</div><div class="tile-name">Premium</div><div class="tile-sub">₹5400/day</div>
+            </div>
+          </div>
+          <input type="hidden" name="food" id="inp-food" value="standard">
+        </div>
+      </div>
+
+      <!-- AI Concepts -->
+      <div class="card">
+        <div class="card-head">
+          <div class="c-icon ci-blue">🤖</div>
+          <div>
+            <div class="c-title">How the AI Works</div>
+            <div class="c-sub">What happens when you click Generate</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="how-steps">
+            <div class="how-step">
+              <div class="how-num">1</div>
+              <div class="how-text">Your form data is sent to <span>Python (Flask)</span> via POST request</div>
+            </div>
+            <div class="how-step">
+              <div class="how-num">2</div>
+              <div class="how-text">Python builds a <span>Goal Stack</span> — a list of goals to achieve</div>
+            </div>
+            <div class="how-step">
+              <div class="how-num">3</div>
+              <div class="how-text">Each goal is resolved using a <span>STRIPS Operator</span> (TRAVEL, BOOK-HOTEL, VISIT, MEALS)</div>
+            </div>
+            <div class="how-step">
+              <div class="how-num">4</div>
+              <div class="how-text">Python checks the <span>Knowledge Base</span> for distances, costs, attractions</div>
+            </div>
+            <div class="how-step">
+              <div class="how-num">5</div>
+              <div class="how-text">The final plan is sent back and shown as a <span>web page</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Generate Button -->
+      <button type="submit" class="gen-btn">
+        ✨ &nbsp; Generate AI Travel Plan &nbsp; →
+      </button>
+
+    </div><!-- /RIGHT -->
+
+  </div><!-- /form-grid -->
+  </form>
+
+</div><!-- /container -->
+
+<script>
+let stops = [];
+
+function selectTile(el, group, value) {
+  // Deselect all tiles in same group
+  el.closest('.tile-grid').querySelectorAll('.tile').forEach(t => t.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('inp-' + group).value = value;
+}
+
+function addStop(city) {
+  const origin = document.getElementById('sel-origin').value;
+  const dest   = document.getElementById('sel-dest').value;
+  if (!city || stops.includes(city) || city === origin || city === dest) return;
+  stops.push(city);
+  renderChips();
+  updateRoute();
+}
+
+function removeStop(city) {
+  stops = stops.filter(c => c !== city);
+  renderChips();
+  updateRoute();
+}
+
+function renderChips() {
+  const el = document.getElementById('chips');
+  document.getElementById('inp-stopovers').value = stops.join(',');
+  if (stops.length === 0) {
+    el.innerHTML = '<span style="font-size:12px;color:var(--mid);font-weight:600;padding-top:4px">No stopovers added</span>';
+  } else {
+    el.innerHTML = stops.map(c =>
+      `<span style="display:inline-flex;align-items:center;gap:5px;background:var(--blue-light);
+       color:var(--blue);border-radius:20px;padding:5px 10px 5px 12px;
+       font-size:12px;font-weight:700;border:1px solid rgba(0,87,255,.15)">
+        ${c}
+        <button type="button" onclick="removeStop('${c}')"
+          style="background:none;border:none;color:var(--blue);cursor:pointer;font-size:14px;
+          padding:0;line-height:1;opacity:.6">×</button>
+      </span>`
+    ).join('');
+  }
+}
+
+function updateRoute() {
+  const origin = document.getElementById('sel-origin').value;
+  const dest   = document.getElementById('sel-dest').value;
+  const all    = [origin, ...stops, dest];
+  const el     = document.getElementById('route-row');
+
+  const dotClass = (i) => i === 0 ? 'dot-start' : i === all.length - 1 ? 'dot-end' : 'dot-stop';
+
+  el.innerHTML = all.map((city, i) =>
+    `<div class="rp-city">
+       <div class="rp-dot ${dotClass(i)}"></div>
+       <span class="rp-name">${city}</span>
+     </div>
+     ${i < all.length - 1 ? '<span class="rp-arrow">→</span>' : ''}`
+  ).join('');
+}
+
+// Init
+updateRoute();
+</script>
+
+</body>
+</html>
